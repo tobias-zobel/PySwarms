@@ -69,22 +69,30 @@ def main():
     boids = [Boid() for _ in range(NUMBER_OF_BOIDS)]
     #print(len(boids))
 
+    show_radius = False
     running = True
     while running:
+        # Event QUIT und Hotkeys
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_g: # Pressing G = Showing Radius
+                show_radius = not show_radius
 
         screen.fill((15, 15, 25))
 
         for boid in boids:
             # Core Loop
-            boid.draw(screen, show_radius and boid is boids[0])
+            boid.draw(screen, show_radius)
             boid.update(boids)
 
         # Showing and rendering fps text above boids
         fps_text = font.render(str(int(clock.get_fps())) + " FPS", True, (255, 255, 0))
         screen.blit(fps_text, (10, 10))
+
+        status = "ON" if show_radius else "OFF"
+        show_radius_text = font.render(f"G = Show Radius {status}", True, (255, 255, 0))
+        screen.blit(show_radius_text, (10, 30))
 
         pygame.display.flip()
         clock.tick(60)
